@@ -1,0 +1,25 @@
+### idea ###
+.idea
+*.iml
+
+### maven ###
+target
+
+### java ###
+*.jar
+*.class
+
+### eclisece ###
+*.classpath
+*.project
+
+### log ###
+log/
+logs/
+*.log
+
+### profile ###
+**/src/main/resources/dev/
+**/src/main/resources/test/
+**/src/main/resources/*-dev.*
+**/src/main/resources/*-test.*

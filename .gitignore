@@ -23,3 +23,4 @@ logs/
 **/src/main/resources/test/
 **/src/main/resources/*-dev.*
 **/src/main/resources/*-test.*
+working

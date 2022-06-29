@@ -20,7 +20,12 @@ public interface Demo01Mapper extends Mapper<Demo01PO, Long> {
     void createTable();
 
     /**
+     * 清理数据表
+     */
+    void clear();
+
+    /**
      * 批量插入数据
      */
-    int insertList(@Param(value = "dPos") List<Demo01PO> dPos);
+    int insertAll(@Param(value = "dPos") List<Demo01PO> dPos);
 }

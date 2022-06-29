@@ -17,7 +17,7 @@ import static java.sql.Types.*;
  */
 @Slf4j
 @SuppressWarnings("JavadocDeclaration")
-public class MysqlTest {
+public class Mysql01Test {
     private static Connection connection;
 
     @BeforeAll

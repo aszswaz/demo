@@ -14,14 +14,19 @@
         CREATE TABLE IF NOT EXISTS mybatis_mapper_demo
         (
             id      BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-            message VARCHAR(255) NOT NULL COMMENT '信息'
+            message VARCHAR(255) UNIQUE NOT NULL COMMENT '信息'
         ) CHARSET 'utf8mb4'
           AUTO_INCREMENT = 10000;
     </insert>
 
-    <!--批量插入数据，并获得数据的 ID-->
-    <insert id="insertList" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-        INSERT INTO mybatis_mapper_demo (message)
+    <!--clean data table-->
+    <delete id="clear">
+        TRUNCATE mybatis_mapper_demo
+    </delete>
+
+    <!--Insert data in batches and get the ID of the data-->
+    <insert id="insertAll" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT IGNORE INTO mybatis_mapper_demo (message)
         VALUES
         <foreach collection="dPos" item="item" separator=",">
             (#{item.message})

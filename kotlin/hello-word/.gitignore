@@ -1,0 +1,11 @@
+# gradle
+.gradle
+build
+gradle
+gradlew
+gradlew.bat
+
+# Java
+*.class
+*.jar
+*.war

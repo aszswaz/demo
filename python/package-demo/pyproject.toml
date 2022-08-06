@@ -1,0 +1,31 @@
+# 设置包的构建工具
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+# 设置 setuptools 的文件扫描
+# [tool.setuptools.packages]
+# 使用默认参数扫描项目目录
+# find = {}
+
+# 这种方式与 tool.setuptools.packages 等同，目的都在于设置 find 的属性
+[tool.setuptools.packages.find]
+# 扫描指定的文件夹
+where = ["src"]
+# 包含指定文件
+# include = []
+# 排除指定文件
+# exlude = []
+namespaces = false
+
+# 项目信息
+[project]
+name = "package_demo"
+version = "v1.0.0"
+dependencies = [
+    "requests"
+]
+
+# build 会为程序创建一个用于启动程序的脚本，以便通过命令行执行程序
+[project.scripts]
+demo = "package_demo.main:main"

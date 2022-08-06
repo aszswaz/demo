@@ -1,0 +1,8 @@
+# python
+__pycache__
+venv
+*.whl
+*.pyo
+*.egg-info
+dist
+build

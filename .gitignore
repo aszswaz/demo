@@ -10,3 +10,7 @@
 *.zip
 *.tar.gz
 *.tar.xz
+
+# archlinux package
+pkg
+*.pkg.tar.zst

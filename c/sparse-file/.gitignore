@@ -1,6 +1,0 @@
-# binary
-check-size
-sparse-files*
-
-# c
-!*.c

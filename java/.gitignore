@@ -5,3 +5,14 @@
 
 # maven
 target
+
+# IntelliJ IDEA
+.idea
+out
+*.iml
+
+# binary
+*.so
+
+# other
+*.log

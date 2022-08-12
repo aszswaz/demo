@@ -3,14 +3,15 @@ all: mmap-read mmap-write mmap-fork
 cc=gcc -g3
 
 mmap-read: mmap-read.c
-	$(cc) mmap-read.c -o mmap-read
+	$(cc) $^ -o $@
 
 mmap-write: mmap-write.c
-	$(cc) mmap-write.c -o mmap-write
+	$(cc) $^ -o $@
 
 mmap-fork: mmap-fork.c
-	$(cc) mmap-fork.c -o mmap-fork
+	$(cc) $^ -o $@
 
 clean:
 	rm mmap-read
 	rm mmap-write
+	rm mmap-fork

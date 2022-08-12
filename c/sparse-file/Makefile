@@ -1,19 +1,21 @@
-all: check-size sparse-files-01 sparse-files-02 sparse-files-03
+all: check-size sparse-files-01 sparse-files-02 sparse-files-03 sparse-files.raw
 
-sparse-files-01: sparse-files-01.c sparse-files.raw
-	gcc sparse-files-01.c -o sparse-files-01
+cc=gcc -g3
 
-sparse-files-02: sparse-files-02.c sparse-files.raw
-	gcc sparse-files-02.c -o sparse-files-02
+sparse-files-01: sparse-files-01.c
+	$(cc) $^ -o $@
+
+sparse-files-02: sparse-files-02.c
+	$(cc) $^ -o $@
 
 sparse-files-03: sparse-files-03.c
-	gcc sparse-files-03.c -o sparse-files-03
+	$(cc) $^ -o $@
 
 check-size: check-size.c
-	gcc check-size.c -o check-size -lm
+	$(cc) $^ -o $@ -lm
 
 sparse-files.raw:
-	dd if=/dev/zero of=sparse-files.raw bs=1 count=0 seek=50M
+	dd if=/dev/zero of=$@ bs=1 count=0 seek=50M
 
 clean:
 	rm sparse-files-01

@@ -5,6 +5,7 @@ pipeline=$(BUILD_DIR)/pipeline
 popen=$(BUILD_DIR)/popen
 pipecmd=$(BUILD_DIR)/pipecmd
 exec=$(BUILD_DIR)/exec
+signal=$(BUILD_DIR)/signal
 
 utils.o=$(BUILD_DIR)/utils.o
 
@@ -12,7 +13,8 @@ all: $(BUILD_DIR) \
 	$(pipeline) \
 	$(popen) \
 	$(pipecmd) \
-	$(exec)
+	$(exec) \
+	$(signal)
 
 $(BUILD_DIR):
 	@mkdir $(BUILD_DIR)
@@ -34,6 +36,9 @@ $(popen): popen.c
 $(exec): exec.c $(utils.o)
 	$(CC) -c $< -o $@.o
 	$(CC) $@.o $(utils.o) -o $@
+
+$(signal): signal.c
+	$(CC) $< -g3 -ggdb -o $@
 
 .PHONY: clean
 clean:

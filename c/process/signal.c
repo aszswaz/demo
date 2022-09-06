@@ -94,6 +94,8 @@ void signal_handler(int code) {
 
 int main() {
 
+    pid_t process = fork();
+
     signal(SIGABRT, signal_handler);
     signal(SIGALRM, signal_handler);
     signal(SIGBUS, signal_handler);
@@ -122,8 +124,12 @@ int main() {
     signal(SIGXCPU, signal_handler);
     signal(SIGXFSZ, signal_handler);
 
-    while(1) {
-        sleep(1);
+    if (process == 0) {
+        while(1) {
+            sleep(1);
+        }
+    } else if (process > 0) {
+        sleep(5);
     }
 
     return EXIT_SUCCESS;

@@ -7,8 +7,7 @@
         let message = message . ' ' . message
     endfor
 
-    let s:win_buf = bufadd('popup-demo')
-    call bufload(s:win_buf)
+    let s:win_buf = nvim_create_buf(v:false, v:true)
     call setbufline(s:win_buf, 1, message)
     echo 'buf id: ' . s:win_buf
 
@@ -34,7 +33,6 @@
                 \})
 
     call nvim_win_set_option(s:win_id, 'wrap', v:true)
-    call win_execute(s:win_id, 'set nomodifiable')
     call nvim_win_set_option(s:win_id, 'winhighlight', 'NormalFloat:PopupDemo,FloatBorder:PopupDemo')
     echo 'win id: ' . s:win_id
     call timer_start(5000, 'PopupClose')

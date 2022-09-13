@@ -1,25 +1,28 @@
-all: check-size sparse-files-01 sparse-files-02 sparse-files-03 sparse-files.raw
+BUILD_DIR=build
+CFLAGS=-g3 -ggdb -Werror -Wextra
+cc=@gcc $(CFLAGS)
 
-cc=gcc -g3
+all: $(BUILD_DIR) check-size sparse-files-01 sparse-files-02 sparse-files-03 sparse-files.raw
 
-sparse-files-01: sparse-files-01.c
+$(BUILD_DIR):
+	@mkdir -p $(BUILD_DIR)
+
+$(BUILD_DIR)/sparse-files-01: sparse-files-01.c
 	$(cc) $^ -o $@
 
-sparse-files-02: sparse-files-02.c
+$(BUILD_DIR)/sparse-files-02: sparse-files-02.c
 	$(cc) $^ -o $@
 
-sparse-files-03: sparse-files-03.c
+$(BUILD_DIR)/sparse-files-03: sparse-files-03.c
 	$(cc) $^ -o $@
 
-check-size: check-size.c
+$(BUILD_DIR)/check-size: check-size.c
 	$(cc) $^ -o $@ -lm
 
 sparse-files.raw:
-	dd if=/dev/zero of=$@ bs=1 count=0 seek=50M
+	@dd if=/dev/zero of=$@ bs=1 count=0 seek=50M
 
+.PHONY: clean
 clean:
-	rm sparse-files-01
-	rm sparse-files-02
-	rm sparse-files.raw
-	rm check-size
-	rm sparse-files-03
+	@rm -rf $(BUILD_DIR)
+	@rm sparse-files.raw

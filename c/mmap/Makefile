@@ -1,17 +1,20 @@
-all: mmap-read mmap-write mmap-fork
+CFLAGS=-g3 -ggdb -Werror -Wextra
+CC=@gcc $(CFLAGS)
+BUILD_DIR=build
 
-cc=gcc -g3
+all: $(BUILD_DIR)/mmap-read \
+	$(BUILD_DIR)/mmap-write \
+	$(BUILD_DIR)/mmap-fork
 
-mmap-read: mmap-read.c
-	$(cc) $^ -o $@
+$(BUILD_DIR)/mmap-read: mmap-read.c
+	$(CC) $^ -o $@
 
-mmap-write: mmap-write.c
-	$(cc) $^ -o $@
+$(BUILD_DIR)/mmap-write: mmap-write.c
+	$(CC) $^ -o $@
 
-mmap-fork: mmap-fork.c
-	$(cc) $^ -o $@
+$(BUILD_DIR)/mmap-fork: mmap-fork.c
+	$(CC) $^ -o $@
 
+.PHONY: clean
 clean:
-	rm mmap-read
-	rm mmap-write
-	rm mmap-fork
+	@rm -rf $(BUILD_DIR)

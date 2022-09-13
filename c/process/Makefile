@@ -1,5 +1,6 @@
 BUILD_DIR = build
-CC=@gcc -o3 -g3 -ggdb -Werror -Wextra
+CFLAGS=-g3 -ggdb -Werror -Wextra
+CC=@gcc $(CFLAGS)
 
 pipeline=$(BUILD_DIR)/pipeline
 popen=$(BUILD_DIR)/popen

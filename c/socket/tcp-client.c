@@ -4,10 +4,11 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "sys/socket.h"
-#include "netinet/in.h"
-#include "arpa/inet.h"
-#include "netdb.h"
+#include <netinet/in.h>
+#include <netinet/tcp.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <netdb.h>
 
 #define SYSCALL_ERROR(expression) \
     if (expression) { \
@@ -23,6 +24,8 @@ int main() {
     socklen_t saddr_len = sizeof(saddr);
     const char *message = "Hello World";
     char buff[BUFSIZ];
+    const int tcp_retries = 3;
+    struct timeval timeout = {10, 0};
 
     // Quey DNS.
     host = gethostbyname("localhost");
@@ -39,6 +42,14 @@ int main() {
     // Create a socket using the TCP protocol.
     ssocketfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     SYSCALL_ERROR(ssocketfd == -1);
+    // Set the number of TCP handshake retries.
+    code = setsockopt(ssocketfd, IPPROTO_TCP, TCP_SYNCNT, &tcp_retries, sizeof(tcp_retries));
+    SYSCALL_ERROR(code == -1);
+    // Set the socket read and write timeout.
+    code = setsockopt(ssocketfd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
+    SYSCALL_ERROR(code == -1);
+    code = setsockopt(ssocketfd, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));
+    SYSCALL_ERROR(code == -1);
     code = connect(ssocketfd, (struct sockaddr *)&saddr, saddr_len);
     SYSCALL_ERROR(code == -1);
     printf("connected server\n");

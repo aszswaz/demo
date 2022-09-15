@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 #include <netinet/in.h>
+#include <netinet/tcp.h>
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <unistd.h>
@@ -15,18 +16,6 @@
         goto finally; \
     }
 
-#define RECV_DATA(socket, buff, buffLen) \
-    if (recv(socket, buff, buffLen, 0) == -1) { \
-        fprintf(stderr, "recv error: %s\n", strerror(errno)); \
-        return EXIT_FAILURE; \
-    }
-
-#define SEND_DATA(socket, buff, buffLen) \
-    if (send(socket, buff, buffLen, 0) == -1) { \
-        fprintf(stderr, "send data error: %s\n", strerror(errno)); \
-        return EXIT_FAILURE; \
-    }
-
 int main() {
     int sockfd = -1, clientfd = -1;
     struct sockaddr_in saddr;
@@ -35,10 +24,20 @@ int main() {
     struct sockaddr_in caddr;
     socklen_t caddr_len = sizeof(caddr);
     char buff[BUFSIZ];
+    const int tcp_retries = 3;
+    struct timeval timeout = {10, 0};
 
     // Create a socket using TCP.
     sockfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     SYSCALL_ERROR(sockfd == -1);
+    // Set the number of TCP handshake retries.
+    code = setsockopt(sockfd, IPPROTO_TCP, TCP_SYNCNT, &tcp_retries, sizeof(tcp_retries));
+    SYSCALL_ERROR(code == -1);
+    // Set the socket read and write timeout.
+    code = setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
+    SYSCALL_ERROR(code == -1);
+    code = setsockopt(sockfd, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));
+    SYSCALL_ERROR(code);
 
     saddr.sin_port = htons(8080);
     saddr.sin_family = AF_INET;

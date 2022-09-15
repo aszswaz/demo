@@ -46,5 +46,6 @@ int main() {
 
 finally:
     if (sockfd != -1) close(sockfd);
+    unlink(CLIENT_SOCK);
     return EXIT_SUCCESS;
 }

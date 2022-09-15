@@ -43,5 +43,6 @@ int main() {
 
 finally:
     if (sockfd != -1) close(sockfd);
+    unlink(SOCK_PATH);
     return EXIT_SUCCESS;
 }

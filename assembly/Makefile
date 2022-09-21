@@ -1,12 +1,13 @@
 BUILD_DIR=build
-# CFLAGS=-f elf64
-CFLAGS=-f elf
-CC=@nasm $(CFLAGS)
+CC=@nasm -f elf
+CC64=@nasm -f elf64
 LD=@ld -m elf_i386
+LD64=@ld
 
 all: $(BUILD_DIR) \
 	$(BUILD_DIR)/main \
-	$(BUILD_DIR)/demo \
+	$(BUILD_DIR)/hello-world \
+	$(BUILD_DIR)/hello-world02 \
 	$(BUILD_DIR)/memory
 
 $(BUILD_DIR):
@@ -21,11 +22,17 @@ $(BUILD_DIR)/main.o: main.asm
 $(BUILD_DIR)/print.o: print.asm
 	$(CC) $< -o $@
 
-$(BUILD_DIR)/demo: $(BUILD_DIR)/demo.o
+$(BUILD_DIR)/hello-world: $(BUILD_DIR)/hello-world.o
 	$(LD) $< -o $@
 
-$(BUILD_DIR)/demo.o: demo.asm
+$(BUILD_DIR)/hello-world.o: hello-world.asm
 	$(CC) $< -o $@
+
+$(BUILD_DIR)/hello-world02.o: hello-world02.asm
+	$(CC64) $< -o $@
+
+$(BUILD_DIR)/hello-world02: $(BUILD_DIR)/hello-world02.o
+	$(LD64) $< -o $@
 
 $(BUILD_DIR)/memory: $(BUILD_DIR)/memory.o
 	$(LD) $< -o $@

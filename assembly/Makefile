@@ -1,4 +1,5 @@
 BUILD_DIR=build
+
 CC=@nasm -f elf $< -o $@
 CC64=@nasm -f elf64 $< -o $@
 GCC=@gcc -m32
@@ -11,7 +12,9 @@ all: $(BUILD_DIR) \
 	$(BUILD_DIR)/hello-world02 \
 	$(BUILD_DIR)/memory \
 	$(BUILD_DIR)/c-demo \
-	$(BUILD_DIR)/c-print
+	$(BUILD_DIR)/c-print \
+	$(BUILD_DIR)/c-print64 \
+	$(BUILD_DIR)/push-pop
 
 $(BUILD_DIR):
 	@mkdir -p $(BUILD_DIR)
@@ -57,6 +60,14 @@ $(BUILD_DIR)/c-print.o: c-print.asm
 
 $(BUILD_DIR)/c-print: $(BUILD_DIR)/c-print.o
 	$(GCC) -no-pie $< -o $@
+
+$(BUILD_DIR)/c-print64: c-print64.asm
+	@nasm -f elf64 $< -o $@.o
+	@gcc -no-pie $@.o -o $@
+
+$(BUILD_DIR)/push-pop: push-pop.asm
+	@nasm -f elf32 $< -o $@.o
+	@gcc -m32 -no-pie $@.o -o $@
 
 .PHONY: clean
 clean:

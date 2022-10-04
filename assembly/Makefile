@@ -14,10 +14,15 @@ all: $(BUILD_DIR) \
 	$(BUILD_DIR)/c-demo \
 	$(BUILD_DIR)/c-print \
 	$(BUILD_DIR)/c-print64 \
-	$(BUILD_DIR)/push-pop
+	$(BUILD_DIR)/push-pop \
+	$(BUILD_DIR)/conditional-transfer
 
 $(BUILD_DIR):
 	@mkdir -p $(BUILD_DIR)
+
+.PHONY: clean
+clean:
+	@rm -rf $(BUILD_DIR)
 
 $(BUILD_DIR)/main: $(BUILD_DIR)/main.o $(BUILD_DIR)/print.o
 	$(LD) $^ -o $@
@@ -69,6 +74,6 @@ $(BUILD_DIR)/push-pop: push-pop.asm
 	@nasm -f elf32 $< -o $@.o
 	@gcc -m32 -no-pie $@.o -o $@
 
-.PHONY: clean
-clean:
-	@rm -rf $(BUILD_DIR)
+$(BUILD_DIR)/conditional-transfer: conditional-transfer.asm
+	@nasm -f elf32 $< -o $@.o
+	@gcc -m32 -no-pie $@.o -o $@

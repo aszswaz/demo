@@ -22,7 +22,7 @@ _start:
     ; 调用外部函数
     call print
     ; 回收 print 函数的参数占用的空间
-    add esp. 8
+    add esp, 8
 
     ; 函数调用完毕，退出程序
     ; 设置程序返回值（exit code）

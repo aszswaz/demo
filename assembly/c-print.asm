@@ -14,6 +14,7 @@ main:
     push MESSAGE
     push FORMAT
     call printf
+    add esp, 8
 
     push 0
     call exit

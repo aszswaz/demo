@@ -1,8 +1,8 @@
 BUILD_DIR=build
 
-CC=@nasm -f elf $< -o $@
-CC64=@nasm -f elf64 $< -o $@
-GCC=@gcc -m32
+CC=@nasm -g -f elf32 $< -o $@
+CC64=@nasm -g -f elf64 $< -o $@
+GCC=@gcc -m32 -g3
 LD=@ld -m elf_i386
 LD64=@ld
 

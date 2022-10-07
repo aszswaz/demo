@@ -3,7 +3,8 @@ section .bss
 ; 定义一块未初始化的内存
 CACHE: resb 10
 CACHE_LEN: equ $ - CACHE
-BUFFER: resb 8192
+BUFFER01: resb 8192
+BUFFER02: resb 8192
 
 section .data
 MESSAGE: db "Hello World", 10
@@ -48,18 +49,39 @@ _start:
     call print
     add esp, 8
 
+    ; 通过 mov 指令复制内存
+    ; 设置源地址
+    mov esi, MESSAGE
+    ; 设置目标地址
+    mov edi, BUFFER01
+    ; 使用 ecx 寄存器进行循环计数
+    mov ecx, MESSAGE_LEN
+    cycle:
+        mov ah, [esi]
+        mov [edi], ah
+        add esi, 1
+        add edi, 1
+        sub ecx, 1
+        cmp ecx, 0
+        ; 如果 ecx > 0，继续复制剩下的内容
+        ja cycle
+    push BUFFER01
+    push MESSAGE_LEN
+    call print
+    add esp, 8
+
     ; 通过 movsb 指令族复制内存
     ; 设置源内存地址，段寄存器是 DS
     mov esi, MESSAGE
     ; 设置源内存地址，段寄存器是 ES
-    mov edi, BUFFER
+    mov edi, BUFFER02
     ; 设置要复制的内存大小
     mov ecx, MESSAGE_LEN
     ; 开始复制内存
     ; rep 是重复执行指定的指令，重复次数通过 ecx 指定
-    ; movsb 是每次复制一个字节，并且 esi 自动加 1
+    ; movsb 是每次复制一个字节，并且 esi 和 edi 自动加 1
     rep movsb
-    push BUFFER
+    push BUFFER02
     push MESSAGE_LEN
     call print
     add esp, 8

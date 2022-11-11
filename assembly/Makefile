@@ -15,7 +15,8 @@ all: $(BUILD_DIR) \
 	$(BUILD_DIR)/c-print \
 	$(BUILD_DIR)/c-print64 \
 	$(BUILD_DIR)/push-pop \
-	$(BUILD_DIR)/conditional-transfer
+	$(BUILD_DIR)/conditional-transfer \
+	$(BUILD_DIR)/arithmetic
 
 $(BUILD_DIR):
 	@mkdir -p $(BUILD_DIR)
@@ -77,3 +78,7 @@ $(BUILD_DIR)/push-pop: push-pop.asm
 $(BUILD_DIR)/conditional-transfer: conditional-transfer.asm
 	@nasm -f elf32 $< -o $@.o
 	@gcc -m32 -no-pie $@.o -o $@
+
+$(BUILD_DIR)/arithmetic: arithmetic.asm
+	@nasm -f elf64 $< -o $@.o
+	@gcc -no-pie $@.o -o $@

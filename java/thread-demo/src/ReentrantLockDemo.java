@@ -1,6 +1,9 @@
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * 公平锁演示
+ */
 public class ReentrantLockDemo extends Thread {
     private static int num;
 

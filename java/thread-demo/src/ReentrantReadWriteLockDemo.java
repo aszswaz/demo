@@ -1,10 +1,10 @@
-import sun.misc.Unsafe;
-
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+/**
+ * 读写锁演示
+ */
 public class ReentrantReadWriteLockDemo extends Thread {
     private static final Lock READ_LOCK;
     private static final Lock WRITE_LOCK;

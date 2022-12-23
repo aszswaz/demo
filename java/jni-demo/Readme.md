@@ -2,7 +2,7 @@
 
 Java JNI demo
 
-# Demo
+# ReentrantLockDemo
 
 ```bash
 $ mkdir out && javac -d out -sourcepath src src/com/example/JniDemo.java

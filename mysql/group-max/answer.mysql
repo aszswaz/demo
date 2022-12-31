@@ -1,0 +1,31 @@
+# 解答
+
+# 获取三个表的全局数据
+CREATE TEMPORARY TABLE tmp_data SELECT
+    c.id as 'class_id',
+    c.name as 'class',
+    s1.id as 'student_id',
+    s1.name as 'name',
+    s1.age as 'age',
+    s2.score as 'score'
+    FROM class c
+    INNER JOIN student s1 ON c.id = s1.class_id
+    INNER JOIN score s2 ON s2.student_id = s1.id;
+
+# 获取每个班级最高成绩
+CREATE TEMPORARY TABLE tmp_highest_score SELECT
+    d.class_id, MAX(d.score) AS score
+    FROM tmp_data d
+    GROUP BY d.class_id;
+
+# 获取对应的学生信息
+SELECT
+    d.class AS class,
+    d.name AS name,
+    d.age AS age,
+    d.score AS score
+    FROM tmp_data d
+    INNER JOIN tmp_highest_score hs ON d.score = hs.score AND d.class_id = hs.class_id;
+
+DROP TABLE tmp_data;
+DROP TABLE tmp_highest_score;

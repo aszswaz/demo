@@ -14,3 +14,11 @@
 # archlinux package
 pkg
 *.pkg.tar.zst
+
+# C、C++
+*.so
+*.dll
+
+# Java
+*.class
+*.jar

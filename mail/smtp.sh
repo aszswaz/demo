@@ -72,7 +72,7 @@ mailRead
 
 # 发送邮件标题
 mailSend "From: \"Bob Example\" <$FORM_USER>"
-mailSend "To: Alice Example <$TO_USER>"
+mailSend "To: \"Alice Example\" <$TO_USER>"
 mailSend "Date: $(date --rfc-email)"
 mailSend "Subject: Test message"
 mailSend ""

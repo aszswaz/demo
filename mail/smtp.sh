@@ -9,7 +9,7 @@ if [[ $TO_USER == "" ]]; then
     echo "请设置环境变量 TO_USER"
     exit 1
 fi
-if [[ $FORM_USER == "" ]]; then
+if [[ $FROM_USER == "" ]]; then
     echo "请设置环境变量 FROM_USER"
     exit 1
 fi
@@ -54,12 +54,12 @@ function mailRead() {
 
 mailRead
 # 发送问候，表明自己的身份，一般是域名，需要与下面的 MAIL FROM 对应
-mailSend "EHLO mail.$(echo $FORM_USER | awk '-F@' '{ print $2 }')"
+mailSend "EHLO mail.$(echo $FROM_USER | awk '-F@' '{ print $2 }')"
 # 读取响应
 mailRead
 
 # 邮件表明邮件发送人
-mailSend "MAIL FROM:<$FORM_USER>"
+mailSend "MAIL FROM:<$FROM_USER>"
 mailRead
 
 # 表明邮件目标账户
@@ -71,7 +71,7 @@ mailSend "DATA"
 mailRead
 
 # 发送邮件标题
-mailSend "From: \"Bob Example\" <$FORM_USER>"
+mailSend "From: \"Bob Example\" <$FROM_USER>"
 mailSend "To: \"Alice Example\" <$TO_USER>"
 mailSend "Date: $(date --rfc-email)"
 mailSend "Subject: Test message"
@@ -86,3 +86,4 @@ mailRead
 mailSend "QUIT"
 mailRead
 # 关闭 socket
+eval "exec $socket<&-"

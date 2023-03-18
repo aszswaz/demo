@@ -54,7 +54,7 @@ function mailRead() {
 
 mailRead
 # 发送问候，表明自己的身份，一般是域名，需要与下面的 MAIL FROM 对应
-mailSend "HELO mail.$(echo $FORM_USER | awk '-F@' '{ print $2 }')"
+mailSend "EHLO mail.$(echo $FORM_USER | awk '-F@' '{ print $2 }')"
 # 读取响应
 mailRead
 

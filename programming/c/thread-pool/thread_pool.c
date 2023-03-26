@@ -55,7 +55,6 @@ static void *thread_pool_poll(void *args) {
             free(task);
         } else {
             PTHREAD_ERROR(pthread_mutex_unlock(&self->tasks_lock));
-            continue;
         }
     }
 

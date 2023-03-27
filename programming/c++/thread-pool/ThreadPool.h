@@ -14,22 +14,22 @@ using namespace std;
 class ThreadPool {
     private:
         // 待执行的任务队列
-        static queue<Thread *> tasks;
+        queue<Thread *> *tasks;
         // 线程池中的工作线程
-        static thread **threads;
-        static int threadsSize;
+        vector<thread *> *threads;
         // 任务队列线程锁
-        static mutex mlock;
+        mutex lock;
         // 任务队列准备就绪信号
-        static condition_variable ready;
-        static bool runing;
+        condition_variable ready;
+        bool runing;
     public:
-        static void init();
-        static void shutdown();
-        static void pushTask(Thread *task);
+        ThreadPool(queue<Thread *> *tasks, vector<thread *> *threads);
+        ~ThreadPool();
+        static shared_ptr<ThreadPool> init();
+        void pushTask(Thread *task);
+        void shutdown();
     private:
-        static void start();
-        static Thread *popTask();
+        static void run(shared_ptr<ThreadPool> pool);
 };
 
 #endif

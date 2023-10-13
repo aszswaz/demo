@@ -7,15 +7,15 @@
 #pragma comment(lib, "ws2_32.lib")
 #pragma comment(lib, "bthprops.lib")
 
-// Ä¿±êÀ¶ÑÀÉè±¸µØÖ·
+// ç›®æ ‡è“ç‰™è®¾å¤‡åœ°å€
 #define ADDRESS 0xD83ADD56AF08
-// ÒªÏëÄ¿±êÉè±¸·¢ËÍµÄÊı¾İ
+// è¦æƒ³ç›®æ ‡è®¾å¤‡å‘é€çš„æ•°æ®
 #define MSG "Hello World!"
-// RFCOMM ¶Ë¿Ú£¬È¡Öµ·¶Î§£º1 - 30
+// RFCOMM ç«¯å£ï¼Œå–å€¼èŒƒå›´ï¼š1 - 30
 #define PORT 29
 
 /*
- Í¨¹ıÀ¶ÑÀµÄ RFCOMM Ğ­Òé½øĞĞ¿É¿¿µÄÊı¾İ´«Êä
+ é€šè¿‡è“ç‰™çš„ RFCOMM åè®®è¿›è¡Œå¯é çš„æ•°æ®ä¼ è¾“
 */
 int main() {
     int code = {};
@@ -24,7 +24,7 @@ int main() {
     SOCKET sock = {};
     SOCKADDR_BTH addr = {};
 
-    // ³õÊ¼»¯ win socket
+    // åˆå§‹åŒ– win socket
     socketVersion = MAKEWORD(2, 2);
     code = WSAStartup(socketVersion, &sock_data);
     if (code) {
@@ -32,14 +32,14 @@ int main() {
         goto finish;
     }
 
-    // ´´½¨À¶ÑÀ RFCOMM socket
+    // åˆ›å»ºè“ç‰™ RFCOMM socket
     sock = socket(AF_BTH, SOCK_STREAM, BTHPROTO_RFCOMM);
     if (sock == INVALID_SOCKET) {
         std::cerr << "create socket error: " << WSAGetLastError() << std::endl;
         goto finish;
     }
 
-    // ½¨Á¢À¶ÑÀ RFCOMM Á¬½Ó
+    // å»ºç«‹è“ç‰™ RFCOMM è¿æ¥
     addr.addressFamily = AF_BTH;
     addr.btAddr = ADDRESS;
     addr.port = PORT;

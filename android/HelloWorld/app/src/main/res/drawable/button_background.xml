@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--按钮的背景颜色选择器-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--按下或抬起按钮切换颜色-->
+    <item
+        android:color="#000000"
+        android:state_pressed="false"/>
+    <item
+        android:color="#66CCFF"
+        android:state_pressed="true"/>
+</selector>

@@ -52,8 +52,8 @@ class ButtonActivity : AppCompatActivity(), OnClickListener, OnLongClickListener
     }
 
     private fun initBtn02() {
-        val disable = "禁用“" + btn01.text + "“按钮"
-        val enable = "启用“" + btn01.text + "“按钮"
+        val disable = "禁用“${btn01.text}“按钮"
+        val enable = "启用“${btn01.text}“按钮"
 
         val btn02 = super.findViewById<Button>(R.id.btn02)
         btn02.text = disable

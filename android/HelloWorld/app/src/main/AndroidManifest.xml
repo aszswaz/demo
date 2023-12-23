@@ -13,7 +13,19 @@
         android:theme="@style/Theme.HelloWorld"
         tools:targetApi="31">
         <activity
-            android:name=".DemoActivity01"
+            android:name=".ScrollViewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".GridLayoutActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ButtonActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TextViewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RelativeLayoutActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

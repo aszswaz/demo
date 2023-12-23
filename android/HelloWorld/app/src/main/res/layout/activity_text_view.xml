@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".DemoActivity01">
+    tools:context=".TextViewActivity">
 
     <!--
     普通文本
@@ -13,7 +13,7 @@
     android:gravity="center" 表示页面居中
     -->
     <TextView
-        android:id="@+id/activity_demo01_label"
+        android:id="@+id/text_view_label"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="@color/white"
@@ -25,7 +25,7 @@
 
     <!--点击按钮修改标签的文本-->
     <Button
-        android:id="@+id/activity_demo01_btn"
+        android:id="@+id/text_view_btn"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:backgroundTint="@drawable/button_background"
@@ -37,7 +37,7 @@
     autofillHints 设置自动填充
     -->
     <EditText
-        android:id="@+id/activity_demo01_input"
+        android:id="@+id/text_view_input"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:autofillHints="no"

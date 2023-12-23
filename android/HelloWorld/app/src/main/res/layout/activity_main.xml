@@ -1,21 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<!--
-设置页面的布局方式为线性布局
-android:orientation 设置线性方向
--->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:orientation="vertical"
     tools:context=".MainActivity">
-    
+
     <Button
-        android:id="@+id/activity_demo01"
+        android:id="@+id/activity_button"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="@string/activity_demo01"/>
+        android:text="ButtonActivity"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/activity_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="TextView"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/activity_relative_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="RelativeLayout"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/activity_grid_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="GridLayout"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/activity_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="ScrollView"
+        tools:ignore="HardcodedText" />
 
 </LinearLayout>

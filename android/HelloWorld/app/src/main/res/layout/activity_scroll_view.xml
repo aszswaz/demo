@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?><!--滚动视图-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ScrollViewActivity">
+
+    <!--横向滚动视图-->
+    <HorizontalScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        tools:ignore="UselessParent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <View
+                android:layout_width="300dp"
+                android:layout_height="match_parent"
+                android:background="@color/green" />
+
+            <View
+                android:layout_width="300dp"
+                android:layout_height="match_parent"
+                android:background="@color/yellow" />
+
+            <View
+                android:layout_width="300dp"
+                android:layout_height="match_parent"
+                android:background="@color/blue" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!--垂直滚动条-->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:background="@color/green" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:background="@color/yellow" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:background="@color/blue" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

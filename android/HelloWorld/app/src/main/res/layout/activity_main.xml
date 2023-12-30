@@ -41,4 +41,25 @@
         android:text="ScrollView"
         tools:ignore="HardcodedText" />
 
+    <Button
+        android:id="@+id/activity_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="ImageView"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/activity_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="ListView"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/activity_sqlite"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="SQLite"
+        tools:ignore="HardcodedText" />
+
 </LinearLayout>

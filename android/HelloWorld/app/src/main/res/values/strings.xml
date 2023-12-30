@@ -2,4 +2,13 @@
     <string name="app_name">Hello World</string>
 
     <string name="btn01_text">点击</string>
+
+    <string name="create_table">
+        CREATE TABLE IF NOT EXISTS user (
+            id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+            name VARCHAR NOT NULL,
+            age INTEGER NOT NULL,
+            height LONG NOT NULL
+        );
+    </string>
 </resources>

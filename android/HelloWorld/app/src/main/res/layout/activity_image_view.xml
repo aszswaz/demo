@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ImageViewActivity">
+
+    <!--
+    android:scaleType：图片的显示方式，比如拉伸和缩小，center 表示图片以原始尺寸显示在组件的中间
+    -->
+    <ImageView
+        android:id="@+id/image01"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:contentDescription="缺失芭芭拉的图片"
+        android:scaleType="center"
+        android:src="@drawable/barbara"
+        tools:ignore="HardcodedText" />
+
+</LinearLayout>

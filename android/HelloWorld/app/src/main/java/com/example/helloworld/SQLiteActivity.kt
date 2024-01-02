@@ -31,10 +31,6 @@ class SQLiteActivity : AppCompatActivity(), OnClickListener {
         btn.setOnClickListener(this)
     }
 
-    override fun onStart() {
-        super.onStart()
-    }
-
     override fun onStop() {
         super.onStop()
         if (::helper.isInitialized) helper.close()

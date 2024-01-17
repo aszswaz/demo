@@ -37,7 +37,7 @@ class Calcutor(dbus.service.Object):
     )
     def add(self, a1: int, a2: int) -> int:
         """
-        add 函数被映射到 dbus 对象，
+        add 函数被映射到 dbus 对象的 method，可以通过 dbus 调用该函数
         in_signature：函数的参数类型，i 表示 int，ii 表示两个 int 参数，
         out_signature：函数的返回值类型
         """

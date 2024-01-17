@@ -22,3 +22,7 @@ pkg
 # Java
 *.class
 *.jar
+
+# python
+__pycache__
+*.pyc

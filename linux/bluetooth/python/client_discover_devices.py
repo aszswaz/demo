@@ -5,6 +5,8 @@
 
 """
 
+import json
+
 from gi.repository import GLib
 
 import bluetooth_utils
@@ -43,6 +45,12 @@ def get_known_devices(bus):
     managed_objects = object_manager.GetManagedObjects()
 
     for path, ifaces in managed_objects.items():
+        if "org.bluez.Adapter1" in ifaces:
+            adapter = ifaces["org.bluez.Adapter1"]
+            print("蓝牙适配器的详细信息：")
+            print("Address:", adapter["Address"])
+            print("Name:", adapter["Name"])
+
         for iface_name in ifaces:
             if iface_name == bluetooth_constants.DEVICE_INTERFACE:
                 managed_objects_found += 1

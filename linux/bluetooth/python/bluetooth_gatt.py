@@ -86,7 +86,8 @@ class Characteristic(dbus.service.Object):
                 'Flags': self.flags,
                 'Descriptors': dbus.Array(
                     self.get_descriptor_paths(),
-                    signature='o')
+                    signature='o'
+                )
             }
         }
 

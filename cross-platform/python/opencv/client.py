@@ -14,6 +14,8 @@ def main():
             data = sock.recv(81920)
             data = numpy.frombuffer(data, dtype="uint8")
             img = cv2.imdecode(data, 1)
+            if img is None:
+                continue
             img = img.reshape(480, 640, 3)
             cv2.imshow('server_frame', img)
             if cv2.waitKey(1) & 0xFF == ord('q'):

@@ -33,6 +33,7 @@ def send_img(video: cv2.VideoCapture, sock: socket):
     while True:
         _, frame = video.read()
         _, data = cv2.imencode(".jpg", frame, [cv2.IMWRITE_JPEG_QUALITY, 50])
+        data = data.tobytes()
         sock.sendall(data)
 
 

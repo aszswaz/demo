@@ -11,7 +11,7 @@ def main():
         sock.connect(("localhost", 8080))
 
         while True:
-            data = sock.recv(921600)
+            data = read_data(sock)
             data = numpy.frombuffer(data, dtype="uint8")
             img = cv2.imdecode(data, 1)
             img = img.reshape(480, 640, 3)
@@ -22,6 +22,13 @@ def main():
         if sock is not None:
             sock.close()
     pass
+
+
+def read_data(sock: socket):
+    data = sock.recv(8192)
+    frame_size = int.from_bytes(data[0:4], "big")
+    data = sock.recv(frame_size)
+    return data
 
 
 if __name__ == '__main__':

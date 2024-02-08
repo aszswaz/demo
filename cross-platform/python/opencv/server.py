@@ -2,6 +2,7 @@
 from socket import *
 
 import cv2
+import numpy
 
 """
 通过 opencv 打开摄像头，通过 socket 进行传输视频流
@@ -32,6 +33,9 @@ def send_img(video: cv2.VideoCapture, sock: socket):
     while True:
         _, frame = video.read()
         _, data = cv2.imencode(".jpg", frame, [cv2.IMWRITE_JPEG_QUALITY, 50])
+        frame_size = len(data)
+        print("frame size:", frame_size)
+        sock.sendall(frame_size.to_bytes(4, "big"))
         sock.sendall(data)
 
 

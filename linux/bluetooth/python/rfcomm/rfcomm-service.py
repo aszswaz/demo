@@ -1,19 +1,55 @@
-#!/bin/python3
+#!/usr/bin/env python3
+"""PyBluez simple example rfcomm-server.py
 
-import socket
+Simple demonstration of a server application that uses RFCOMM sockets.
 
+Author: Albert Huang <albert@csail.mit.edu>
+$Id: rfcomm-server.py 518 2007-08-10 07:20:07Z albert $
+"""
 
-def main():
-    port = 28
-    server_sock = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
-    server_sock.bind((socket.BDADDR_ANY, port))
-    server_sock.listen(1)
+import time
 
-    client_sock, addr = server_sock.accept()
-    print(addr)
+import bluetooth
 
-    server_sock.close()
+server_sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
+server_sock.bind(("", bluetooth.PORT_ANY))
+server_sock.listen(1)
+
+port = server_sock.getsockname()[1]
+
+uuid = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
+
+bluetooth.advertise_service(
+    server_sock, "SampleServer", service_id=uuid,
+    service_classes=[uuid, bluetooth.SERIAL_PORT_CLASS],
+    profiles=[bluetooth.SERIAL_PORT_PROFILE],
+)
+
+print("Waiting for connection on RFCOMM channel", port)
+
+client_sock, client_info = server_sock.accept()
+print("Accepted connection from", client_info)
+
+try:
+    lastTime = int(time.time())
+    total = 0
+    lastTotal = 0
+    while True:
+        data = client_sock.recv(8192)
+        if not data:
+            break
+        total = total + len(data)
+        ctime = int(time.time())
+        if ctime > lastTime:
+            lastTime = ctime
+            speed = (total - lastTotal) / 1024
+            print("\rspeed:", speed, "kb", end="")
+            lastTotal = total
+except OSError:
     pass
 
+print("Disconnected.")
 
-main()
+client_sock.close()
+server_sock.close()
+print("All done.")

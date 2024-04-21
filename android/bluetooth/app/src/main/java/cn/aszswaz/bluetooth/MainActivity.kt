@@ -16,7 +16,9 @@ import java.util.UUID
 
 @SuppressLint("MissingPermission")
 class MainActivity : AppCompatActivity(), OnClickListener {
-    private val TAG = MainActivity::class.simpleName
+    companion object {
+        private val TAG = MainActivity::class.simpleName
+    }
 
     private lateinit var adapter: BluetoothAdapter;
 

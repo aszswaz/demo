@@ -8,8 +8,9 @@ from gi.repository import GLib
 
 class RFCommProfile(dbus.service.Object):
     def __init__(self, bus):
-        self.path = "/org/bluez/ldsg/advertisement01"
+        self.path = "/org/bluez/ldsg/profile01"
         self.bus = bus
+        dbus.service.Object.__init__(self, bus, self.path)
 
     @dbus.service.method("org.bluez.Profile1")
     def Release(self):
@@ -18,7 +19,7 @@ class RFCommProfile(dbus.service.Object):
 
     @dbus.service.method(
         "org.bluez.Profile1",
-        in_signature="ooa{sq}"
+        in_signature="oxa{sq}"
     )
     def NewConnection(self, device, fd, fd_properties):
         print("NewConnection")
@@ -31,19 +32,29 @@ def main():
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
     bus = dbus.SystemBus()
 
+    """
     manager = dbus.Interface(
         bus.get_object("org.bluez", "/org/bluez/hci0"),
         "org.bluez.ProfileManager1"
     )
+    """
+    manager = dbus.Interface(
+        bus.get_object("org.bluez", "/org/bluez"),
+        "org.bluez.ProfileManager1"
+    )
     profile = RFCommProfile(bus)
-    opt = dbus.Dictionary(mapping_or_iterable={
-        dbus.String("Name"): dbus.String("Hello World"),
-        dbus.String("Role"): dbus.String("server"),
-        dbus.String("Channel"): dbus.UInt16(28),
-        dbus.String("RequireAuthentication"): dbus.Boolean(False),
-        dbus.String("RequireAuthorization"): dbus.Boolean(False)
-    }, signature="a{sv}")
-    manager.RegisterProfile(profile.path, uuid, opt,
+    opt = dbus.Dictionary({
+        "Name": dbus.String("Hello World"),
+        "Service": dbus.String(uuid),
+        "Role": dbus.String("server"),
+        "Channel": dbus.UInt16(28),
+        "RequireAuthentication": dbus.Boolean(False),
+        "RequireAuthorization": dbus.Boolean(False)
+    }, signature="sv")
+    manager.RegisterProfile(
+        dbus.ObjectPath(profile.path), 
+        dbus.String(uuid), 
+        opt,
         reply_handler=register_ad_cb,
         error_handler=register_ad_error_cb
     )
@@ -54,12 +65,12 @@ def main():
 
 
 def register_ad_cb():
-    print('Advertisement registered OK')
+    print("SDP register success")
 
 
 def register_ad_error_cb(error):
-    print('Error: Failed to register advertisement: ' + str(error))
-    quiet()
+    print('Error: Failed to register sdp:', str(error))
+    quit()
 
 
 main()

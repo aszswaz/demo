@@ -10,6 +10,7 @@ def main():
     server_sock.listen(1)
 
     client_sock, addr = server_sock.accept()
+    print(addr)
 
     server_sock.close()
     pass

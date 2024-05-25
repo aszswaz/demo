@@ -1,17 +1,22 @@
 #!/usr/bin/python3
 
 import time
+import signal
 from PIL import Image, ImageDraw, ImageFont
-import numpy
 
 import ST7789VW
 
+dev = ST7789VW.ST7789VW()
+
 
 def main():
-    dev = ST7789VW.ST7789VW()
     try:
         dev.init()
         dev.clear()
+
+        signal.signal(signal.SIGINT, signalExit)
+        signal.signal(signal.SIGHUP, signalExit)
+        signal.signal(signal.SIGTERM, signalExit)
 
         # 加载背景图片
         original_img = Image.open("demo.jpg")
@@ -41,10 +46,13 @@ def main():
                 fill="BLACK", font=font
             )
             dev.show_image(new_img, horizontal)
-            time.sleep(0.5)
     finally:
         dev.close()
         pass
+
+
+def signalExit(sig, frame):
+    dev.close()
 
 
 if __name__ == "__main__":

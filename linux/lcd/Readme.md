@@ -10,8 +10,25 @@
 $ sudo apt install python3-spidev python3-numpy python3-gpiozero
 ```
 
+# 设备接线
+
+```
+VCC -> 17
+GND -> 20
+DIN -> 19
+CLK -> 23
+CS  -> 24
+D/C -> 22
+RST -> 13
+BL  -> 18
+```
+
 # 运行程序
 
 ```bash
 $ python main.py
 ```
+
+# 效果图
+
+![效果图](show.jpg "效果图")

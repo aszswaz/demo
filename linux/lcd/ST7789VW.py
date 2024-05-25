@@ -6,7 +6,7 @@ from gpiozero import DigitalOutputDevice, PWMOutputDevice
 import spidev
 
 
-class LCDScreen:
+class ST7789VW:
 
     width = 240
     height = 320
@@ -120,26 +120,28 @@ class LCDScreen:
         self._data(0x14)
         self._data(0x2F)
         self._data(0x31)
+
         self._command(0x21)
-
         self._command(0x11)
-
         self._command(0x29)
         pass
 
-    def SetWindows(self, Xstart, Ystart, Xend, Yend):
-        # set the X coordinates
+    def set_windows(self, Xstart, Ystart, Xend, Yend):
+        """
+        设置 XY 坐标轴
+        :Xstart X 轴起点
+        :Ystart Y 轴起点
+        :Xend X 轴终点
+        :Yend Y 轴终点
+        """
+        # 设置 X 轴
         self._command(0x2A)
-        # Set the horizontal starting point to the high octet
         self._data(Xstart >> 8)
-        # Set the horizontal starting point to the low octet
         self._data(Xstart & 0xff)
-        # Set the horizontal end to the high octet
         self._data(Xend >> 8)
-        # Set the horizontal end to the low octet
         self._data((Xend - 1) & 0xff)
 
-        # set the Y coordinates
+        # 设置 Y 轴
         self._command(0x2B)
         self._data(Ystart >> 8)
         self._data((Ystart & 0xff))
@@ -148,51 +150,74 @@ class LCDScreen:
 
         self._command(0x2C)
 
-    def ShowImage(self, Image, Xstart=0, Ystart=0):
-        """Set buffer to value of Python Imaging Library image."""
-        """Write display buffer to physical display"""
-        imwidth, imheight = Image.size
-        if imwidth == self.height and imheight == self.width:
-            img = numpy.asarray(Image)
+    def show_image(self, img, horizontal=False):
+        """
+        将缓冲区设置为 Python 图像库图像的值。
+        将显示缓冲区写入物理显示器。
+        """
+        imwidth, imheight = img.size
+
+        if horizontal:
+            # 图片宽度大于等于高度时横向显示
+            img = numpy.asarray(img)
             pix = numpy.zeros(
-                (self.width, self.height, 2), dtype=numpy.uint8)
+                (self.width, self.height, 2), dtype=numpy.uint8
+            )
             # RGB888 >> RGB565
-            pix[..., [0]] = numpy.add(numpy.bitwise_and(
-                img[..., [0]], 0xF8), numpy.right_shift(img[..., [1]], 5))
-            pix[..., [1]] = numpy.add(numpy.bitwise_and(numpy.left_shift(
-                img[..., [1]], 3), 0xE0), numpy.right_shift(img[..., [2]], 3))
+            pix[..., [0]] = numpy.add(
+                numpy.bitwise_and(img[..., [0]], 0xF8),
+                numpy.right_shift(img[..., [1]], 5)
+            )
+            pix[..., [1]] = numpy.add(
+                numpy.bitwise_and(
+                    numpy.left_shift(img[..., [1]], 3), 0xE0
+                ),
+                numpy.right_shift(img[..., [2]], 3)
+            )
             pix = pix.flatten().tolist()
 
             self._command(0x36)
             self._data(0x70)
-            self.SetWindows(0, 0, self.height, self.width)
+            self.set_windows(0, 0, self.height, self.width)
             self.PIN_DC.on()
             for i in range(0, len(pix), 4096):
                 self._write(pix[i:i+4096])
 
         else:
-            img = numpy.asarray(Image)
+            # 图片宽度小于高度时竖向显示
+            img = numpy.asarray(img)
             pix = numpy.zeros(
-                (imheight, imwidth, 2), dtype=numpy.uint8)
+                (imheight, imwidth, 2),
+                dtype=numpy.uint8
+            )
 
-            pix[..., [0]] = numpy.add(numpy.bitwise_and(
-                img[..., [0]], 0xF8), numpy.right_shift(img[..., [1]], 5))
-            pix[..., [1]] = numpy.add(numpy.bitwise_and(numpy.left_shift(
-                img[..., [1]], 3), 0xE0), numpy.right_shift(img[..., [2]], 3))
+            pix[..., [0]] = numpy.add(
+                numpy.bitwise_and(img[..., [0]], 0xF8),
+                numpy.right_shift(img[..., [1]], 5)
+            )
+            pix[..., [1]] = numpy.add(
+                numpy.bitwise_and(
+                    numpy.left_shift(
+                        img[..., [1]], 3), 0xE0
+                ),
+                numpy.right_shift(img[..., [2]], 3)
+            )
 
             pix = pix.flatten().tolist()
 
             self._command(0x36)
             self._data(0x00)
-            self.SetWindows(0, 0, self.width, self.height)
+            self.set_windows(0, 0, self.width, self.height)
             self.PIN_DC.on()
             for i in range(0, len(pix), 4096):
                 self._write(pix[i:i+4096])
 
     def clear(self):
-        """Clear contents of image buffer"""
+        # Clear contents of image buffer
         _buffer = [0xff]*(self.width * self.height * 2)
-        self.SetWindows(0, 0, self.height, self.width)
+        self._command(0x36)
+        self._data(0x70)
+        self.set_windows(0, 0, self.height, self.width)
         self.PIN_DC.on()
         for i in range(0, len(_buffer), 4096):
             self._write(_buffer[i:i+4096])

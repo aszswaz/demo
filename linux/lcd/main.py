@@ -2,29 +2,42 @@
 
 import time
 from PIL import Image, ImageDraw, ImageFont
+import numpy
 
-import LCDScreen
+import ST7789VW
 
 
 def main():
-    lcd = LCDScreen.LCDScreen()
+    dev = ST7789VW.ST7789VW()
     try:
-        lcd.init()
-        lcd.clear()
+        dev.init()
+        dev.clear()
 
-        image = Image.open("demo.jpg")
-        lcd.ShowImage(image)
-        time.sleep(5)
+        # 加载背景图片
+        im = Image.open("demo.jpg")
+
+        width, height = im.size
+        # 是否需要横向显示图片
+        horizontal = width > height
+        # 如果图片的分辨率大于屏幕的分辨率，则调整图片的分辨率以适应屏幕
+        if width * height > dev.width * dev.height:
+            if horizontal:
+                im = im.resize((dev.height, dev.width))
+            else:
+                im = im.resize((dev.width, dev.height))
+
+        # 保存 Image 到内存，以备重复使用
+        buf = numpy.asarray(im)
+        im.close()
 
         font = ImageFont.truetype(
             "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",
             25
         )
         while True:
-            image = Image.new(
-                "RGB", (lcd.height, lcd.width), "WHITE"
-            )
-            draw = ImageDraw.Draw(image)
+            # 在图片上写入当前时间
+            im = Image.fromarray(buf)
+            draw = ImageDraw.Draw(im)
             msg = time.strftime(
                 "%Y-%m-%d %T", time.localtime()
             )
@@ -32,10 +45,10 @@ def main():
                 (0, 0), msg,
                 fill="BLACK", font=font
             )
-            lcd.ShowImage(image)
+            dev.show_image(im, horizontal)
             time.sleep(1)
     finally:
-        lcd.close()
+        dev.close()
         pass
 
 

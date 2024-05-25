@@ -14,21 +14,16 @@ def main():
         dev.clear()
 
         # 加载背景图片
-        im = Image.open("demo.jpg")
-
-        width, height = im.size
+        original_img = Image.open("demo.jpg")
+        width, height = original_img.size
         # 是否需要横向显示图片
         horizontal = width > height
         # 如果图片的分辨率大于屏幕的分辨率，则调整图片的分辨率以适应屏幕
         if width * height > dev.width * dev.height:
             if horizontal:
-                im = im.resize((dev.height, dev.width))
+                original_img = original_img.resize((dev.height, dev.width))
             else:
-                im = im.resize((dev.width, dev.height))
-
-        # 保存 Image 到内存，以备重复使用
-        buf = numpy.asarray(im)
-        im.close()
+                original_img = original_img.resize((dev.width, dev.height))
 
         font = ImageFont.truetype(
             "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",
@@ -36,8 +31,8 @@ def main():
         )
         while True:
             # 在图片上写入当前时间
-            im = Image.fromarray(buf)
-            draw = ImageDraw.Draw(im)
+            new_img = original_img.copy()
+            draw = ImageDraw.Draw(new_img)
             msg = time.strftime(
                 "%Y-%m-%d %T", time.localtime()
             )
@@ -45,8 +40,8 @@ def main():
                 (0, 0), msg,
                 fill="BLACK", font=font
             )
-            dev.show_image(im, horizontal)
-            time.sleep(1)
+            dev.show_image(new_img, horizontal)
+            time.sleep(0.5)
     finally:
         dev.close()
         pass

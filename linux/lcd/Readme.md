@@ -26,9 +26,8 @@ BL  -> 18
 # 运行程序
 
 ```bash
-$ python main.py
+# 显示颜色
+$ python show_color/main.py
+# 显示图片
+$ python show_image/main.py
 ```
-
-# 效果图
-
-![效果图](show.jpg "效果图")

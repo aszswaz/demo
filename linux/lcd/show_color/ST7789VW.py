@@ -1,9 +1,25 @@
 import time
+from enum import IntEnum
+
 
 import numpy
 
 from gpiozero import DigitalOutputDevice, PWMOutputDevice
 import spidev
+
+
+class Command(IntEnum):
+    """
+    显存数据访问控制
+    """
+    MADCTL = 0x36
+
+
+class CommandArg(IntEnum):
+    """
+    显存数据访问控制指令的参数
+    """
+    MADCTL = 0x70
 
 
 class ST7789VW:
@@ -14,11 +30,11 @@ class ST7789VW:
     def __init__(self) -> None:
         # 复位键
         self.PIN_RST = DigitalOutputDevice(
-            27, active_high=True, initial_value=False
+            27, initial_value=False
         )
-        # data or command，0 表示 command，1 表示 data
+        # 表示 SPI 传输的是指令或数据，0 表示指令，1 表示数据
         self.PIN_DC = DigitalOutputDevice(
-            25, active_high=True, initial_value=False
+            25, initial_value=False
         )
         # 背光控制端口
         self.PIN_BL = PWMOutputDevice(18, frequency=1000)
@@ -37,7 +53,7 @@ class ST7789VW:
         """
         self._reset()
 
-        self._command(0x36)
+        self._command(Command.MADCTL)
         self._data(0)
 
         self._command(0x3A)
@@ -150,72 +166,73 @@ class ST7789VW:
 
         self._command(0x2C)
 
-    def show_image(self, img, horizontal=False):
+    def vertical(self, img):
         """
-        将缓冲区设置为 Python 图像库图像的值。
-        将显示缓冲区写入物理显示器。
+        竖向显示
         """
         imwidth, imheight = img.size
+        # 图片宽度小于高度时竖向显示
+        img = numpy.asarray(img)
+        pix = numpy.zeros(
+            (imheight, imwidth, 2),
+            dtype=numpy.uint8
+        )
 
-        if horizontal:
-            # 图片宽度大于等于高度时横向显示
-            img = numpy.asarray(img)
-            pix = numpy.zeros(
-                (self.width, self.height, 2), dtype=numpy.uint8
-            )
-            # RGB888 >> RGB565
-            pix[..., [0]] = numpy.add(
-                numpy.bitwise_and(img[..., [0]], 0xF8),
-                numpy.right_shift(img[..., [1]], 5)
-            )
-            pix[..., [1]] = numpy.add(
-                numpy.bitwise_and(
-                    numpy.left_shift(img[..., [1]], 3), 0xE0
-                ),
-                numpy.right_shift(img[..., [2]], 3)
-            )
-            pix = pix.flatten().tolist()
+        pix[..., [0]] = numpy.add(
+            numpy.bitwise_and(img[..., [0]], 0xF8),
+            numpy.right_shift(img[..., [1]], 5)
+        )
+        pix[..., [1]] = numpy.add(
+            numpy.bitwise_and(
+                numpy.left_shift(
+                    img[..., [1]], 3), 0xE0
+            ),
+            numpy.right_shift(img[..., [2]], 3)
+        )
 
-            self._command(0x36)
-            self._data(0x70)
-            self.set_windows(0, 0, self.height, self.width)
-            self.PIN_DC.on()
-            for i in range(0, len(pix), 4096):
-                self._write(pix[i:i+4096])
+        pix = pix.flatten().tolist()
 
-        else:
-            # 图片宽度小于高度时竖向显示
-            img = numpy.asarray(img)
-            pix = numpy.zeros(
-                (imheight, imwidth, 2),
-                dtype=numpy.uint8
-            )
+        self._command(Command.MADCTL)
+        self._data(0)
+        self.set_windows(0, 0, self.width, self.height)
+        self.PIN_DC.on()
+        for i in range(0, len(pix), 4096):
+            self._write(pix[i:i+4096])
+            time.sleep(0.1)
 
-            pix[..., [0]] = numpy.add(
-                numpy.bitwise_and(img[..., [0]], 0xF8),
-                numpy.right_shift(img[..., [1]], 5)
-            )
-            pix[..., [1]] = numpy.add(
-                numpy.bitwise_and(
-                    numpy.left_shift(
-                        img[..., [1]], 3), 0xE0
-                ),
-                numpy.right_shift(img[..., [2]], 3)
-            )
+    def horizontal(self, img):
+        """
+        横向显示
+        """
+        img = numpy.asarray(img)
+        pix = numpy.zeros(
+            (self.width, self.height, 2), dtype=numpy.uint8
+        )
+        # RGB888 >> RGB565
+        pix[..., [0]] = numpy.add(
+            numpy.bitwise_and(img[..., [0]], 0xF8),
+            numpy.right_shift(img[..., [1]], 5)
+        )
+        pix[..., [1]] = numpy.add(
+            numpy.bitwise_and(
+                numpy.left_shift(img[..., [1]], 3), 0xE0
+            ),
+            numpy.right_shift(img[..., [2]], 3)
+        )
+        pix = pix.flatten().tolist()
 
-            pix = pix.flatten().tolist()
-
-            self._command(0x36)
-            self._data(0x00)
-            self.set_windows(0, 0, self.width, self.height)
-            self.PIN_DC.on()
-            for i in range(0, len(pix), 4096):
-                self._write(pix[i:i+4096])
+        self._command(Command.MADCTL)
+        self._data(CommandArg.MADCTL)
+        self.set_windows(0, 0, self.height, self.width)
+        self.PIN_DC.on()
+        for i in range(0, len(pix), 4096):
+            self._write(pix[i:i+4096])
+            time.sleep(0.1)
 
     def clear(self):
         # Clear contents of image buffer
         _buffer = [0xff]*(self.width * self.height * 2)
-        self._command(0x36)
+        self._command(Command.MADCTL)
         self._data(0x70)
         self.set_windows(0, 0, self.height, self.width)
         self.PIN_DC.on()
@@ -230,6 +247,9 @@ class ST7789VW:
         time.sleep(0.001)
 
     def _reset(self):
+        """
+        初始化 ST7789VW 芯片
+        """
         self.PIN_RST.on()
         time.sleep(0.01)
         self.PIN_RST.off()
@@ -238,11 +258,17 @@ class ST7789VW:
         pass
 
     def _command(self, cmd):
+        """
+        给 ST7789VW 发送指令
+        """
         self.PIN_DC.off()
         self._write([cmd])
         pass
 
     def _data(self, data):
+        """
+        发送指令参数
+        """
         self.PIN_DC.on()
         self._write([data])
         pass
